@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence name="fault_sequence_type_1" trace="disable" xmlns="http://ws.apache.org/ns/synapse">
+    <log level="custom">
+        <property name="text" value="An unexpected error occured"/>
+        <property expression="get-property('ERROR_CODE')" name="code"/>
+        <property expression="get-property('ERROR_MESSAGE')" name="message"/>
+    </log>
+</sequence>

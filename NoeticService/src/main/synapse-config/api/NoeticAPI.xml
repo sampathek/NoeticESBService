@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<api context="/hsapi-gateway" name="NoeticAPI" xmlns="http://ws.apache.org/ns/synapse">
+    <resource methods="GET" uri-template="/availability">
+        <inSequence>
+            <log description="Welcome Msg"/>
+            <log description="Full IN Log"/>
+            <property description="param_checkin" expression="$url:checkIn" name="uri.var.checkIn" scope="default" type="STRING"/>
+            <property description="param_checkout" expression="$url:checkOut" name="uri.var.checkOut" scope="default" type="STRING"/>
+            <log level="custom">
+                <property expression="get-property('uri.var.checkIn')" name="checkIn"/>
+                <property expression="get-property('uri.var.checkOut')" name="checkOut"/>
+            </log>
+            <property expression="fn:concat('Basic ', base64Encode('imperial:TKyENSuMpb63spwIPAUvTvgC8UXLNwkW'))" name="Authorization" scope="transport" type="STRING" xmlns:ns="http://org.apache.synapse/xsd"/>
+            <property name="POST_TO_URI" scope="axis2" type="STRING" value="true"/>
+            <send>
+                <endpoint key="AvailabilityEP"/>
+            </send>
+        </inSequence>
+        <outSequence>
+            <log description="Full OUT Log" level="full"/>
+            <send/>
+        </outSequence>
+        <faultSequence>
+            <sequence key="fault_sequence_type_1"/>
+        </faultSequence>
+    </resource>
+    <resource methods="POST" uri-template="/login">
+        <inSequence>
+            <property expression="json-eval($.)" name="Req-payload" scope="default" type="STRING"/>
+            <property expression="$body" name="payload" scope="default" type="STRING"/>
+            <log level="custom">
+                <property expression="get-property('Req-payload')" name="Request"/>
+            </log>
+            <property expression="fn:concat('Basic ', base64Encode('imperial:TKyENSuMpb63spwIPAUvTvgC8UXLNwkW'))" name="Authorization" scope="transport" type="STRING" xmlns:ns="http://org.apache.synapse/xsd"/>
+            <send>
+                <endpoint key="LoginEP"/>
+            </send>
+        </inSequence>
+        <outSequence>
+            <property expression="json-eval($.)" name="Res-payload" scope="default" type="STRING"/>
+            <log level="custom">
+                <property expression="get-property('Res-payload')" name="Response"/>
+            </log>
+            <payloadFactory media-type="json">
+                <format>{
+                			"source": "ESB",
+						    "person": {
+						        "firstName": "$1",
+						        "lastName": "$2",
+						        "isAppUser": $3
+						    },
+						    "id": "$4",
+						    "token": "$5"
+						}
+				</format>
+                <args>
+                    <arg evaluator="json" expression="$.person.firstName"/>
+                    <arg evaluator="json" expression="$.person.lastName"/>
+                    <arg evaluator="json" expression="$.person.isAppUser"/>
+                    <arg evaluator="json" expression="$.id"/>
+                    <arg evaluator="json" expression="$.token"/>
+                </args>
+            </payloadFactory>
+            <send/>
+        </outSequence>
+        <faultSequence>
+            <sequence key="fault_sequence_type_1"/>
+        </faultSequence>
+    </resource>
+</api>

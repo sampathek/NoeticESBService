@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?><artifacts>
+    <artifact name="NoeticAPI" groupId="com.example.NoeticService.api" version="1.0.0" type="synapse/api" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/api/NoeticAPI.xml</file>
+    </artifact>
+    <artifact name="AvailabilityEP" groupId="com.example.NoeticService.endpoint" version="1.0.0" type="synapse/endpoint" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/endpoints/AvailabilityEP.xml</file>
+    </artifact>
+    <artifact name="LoginEP" groupId="com.example.NoeticService.endpoint" version="1.0.0" type="synapse/endpoint" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/endpoints/LoginEP.xml</file>
+    </artifact>
+    <artifact name="fault_sequence_type_1" groupId="com.example.NoeticService.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/fault_sequence_type_1.xml</file>
+    </artifact>
+</artifacts>
