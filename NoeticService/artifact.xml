@@ -26,4 +26,7 @@
     <artifact name="UserRegisterEP" groupId="com.example.NoeticService.endpoint" version="1.0.0" type="synapse/endpoint" serverRole="EnterpriseServiceBus">
         <file>src/main/synapse-config/endpoints/UserRegisterEP.xml</file>
     </artifact>
+    <artifact name="common_seq" groupId="com.example.NoeticService.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/common_seq.xml</file>
+    </artifact>
 </artifacts>
