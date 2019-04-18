@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence name="profile_api_auth_seq" trace="disable" xmlns="http://ws.apache.org/ns/synapse">
+    <property expression="fn:concat('Basic ', base64Encode('api@noetic:bG9jYWxfaWRlbnRpdHlfYXBpX2V4dGVybmFs'))" name="Authorization" scope="transport" type="STRING" xmlns:ns="http://org.apache.synapse/xsd"/>
+</sequence>

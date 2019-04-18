@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<api context="/hsapi-gateway" name="NoeticAPI" xmlns="http://ws.apache.org/ns/synapse">
-    <resource methods="GET" uri-template="/availability">
+<api context="/api-gateway" name="NoeticAPI" xmlns="http://ws.apache.org/ns/synapse">
+    <resource methods="GET" uri-template="/v1/availability">
         <inSequence>
             <log description="Welcome Msg"/>
             <log description="Full IN Log"/>
@@ -10,8 +10,8 @@
                 <property expression="get-property('uri.var.checkIn')" name="checkIn"/>
                 <property expression="get-property('uri.var.checkOut')" name="checkOut"/>
             </log>
-            <property expression="fn:concat('Basic ', base64Encode('imperial:TKyENSuMpb63spwIPAUvTvgC8UXLNwkW'))" name="Authorization" scope="transport" type="STRING" xmlns:ns="http://org.apache.synapse/xsd"/>
             <property name="POST_TO_URI" scope="axis2" type="STRING" value="true"/>
+            <sequence key="imperial_auth_seq"/>
             <send>
                 <endpoint key="AvailabilityEP"/>
             </send>
@@ -24,14 +24,14 @@
             <sequence key="fault_sequence_type_1"/>
         </faultSequence>
     </resource>
-    <resource methods="POST" uri-template="/login">
+    <resource methods="POST" uri-template="/v1/login">
         <inSequence>
             <property expression="json-eval($.)" name="Req-payload" scope="default" type="STRING"/>
             <property expression="$body" name="payload" scope="default" type="STRING"/>
             <log level="custom">
                 <property expression="get-property('Req-payload')" name="Request"/>
             </log>
-            <property expression="fn:concat('Basic ', base64Encode('imperial:TKyENSuMpb63spwIPAUvTvgC8UXLNwkW'))" name="Authorization" scope="transport" type="STRING" xmlns:ns="http://org.apache.synapse/xsd"/>
+            <sequence key="imperial_auth_seq"/>
             <send>
                 <endpoint key="LoginEP"/>
             </send>
@@ -42,25 +42,103 @@
                 <property expression="get-property('Res-payload')" name="Response"/>
             </log>
             <payloadFactory media-type="json">
-                <format>{
-                			"source": "ESB",
-						    "person": {
-						        "firstName": "$1",
-						        "lastName": "$2",
-						        "isAppUser": $3
-						    },
-						    "id": "$4",
-						    "token": "$5"
-						}
-				</format>
+                <format>
+					{
+					    "password": "$1",
+					    "newPassword": "$1",
+					    "typeId": $2,
+					    "version": $3,
+					    "identityApiDTO": {
+					        "userName": "$4",
+					        "firstName": "$5",
+					        "lastName": "$6",
+					        "emailPrimary": "$4",
+					        "addresses": [
+					            {
+					                "firstLineOfAddress": "$7",
+					                "secondLineOfAddress": "$8",
+					                "city": "$9",
+					                "postCode": "$10",
+					                "countryCode": "$11",
+					                "stateCode": "",
+					                "typeId": $2
+					            }
+					        ],
+					        "systemId": $12,
+					        "emailVerifiedExpiry": 2522966400000
+					    },
+					    "remarks": ""
+					}
+	            </format>
                 <args>
-                    <arg evaluator="json" expression="$.person.firstName"/>
+                    <arg evaluator="xml" expression="get-property('password')"/>
+                    <arg evaluator="xml" expression="get-property('typeId')"/>
+                    <arg evaluator="xml" expression="get-property('version')"/>
+                    <arg evaluator="json" expression="$.username"/>
+                    <arg evaluator="json" expression="$person.firstName"/>
                     <arg evaluator="json" expression="$.person.lastName"/>
-                    <arg evaluator="json" expression="$.person.isAppUser"/>
-                    <arg evaluator="json" expression="$.id"/>
-                    <arg evaluator="json" expression="$.token"/>
+                    <arg evaluator="json" expression="$.addresses[0].line1"/>
+                    <arg evaluator="json" expression="$.addresses[0].line2"/>
+                    <arg evaluator="json" expression="$.addresses[0].town"/>
+                    <arg evaluator="json" expression="$.addresses[0].postcode"/>
+                    <arg evaluator="json" expression="$.addresses[0].country"/>
+                    <arg evaluator="xml" expression="get-property('systemId')"/>
                 </args>
             </payloadFactory>
+            <send/>
+        </outSequence>
+        <faultSequence>
+            <sequence key="fault_sequence_type_1"/>
+        </faultSequence>
+    </resource>
+    <resource methods="POST" uri-template="/v1/register">
+        <inSequence>
+            <property name="messageType" scope="axis2" type="STRING" value="application/json"/>
+            <property expression="json-eval($.)" name="Req-payload" scope="default" type="STRING"/>
+            <property expression="json-eval($.password)" name="password" scope="default" type="STRING"/>
+            <property expression="json-eval($.typeId)" name="typeId" scope="default" type="STRING"/>
+            <property expression="json-eval($.version)" name="version" scope="default" type="STRING"/>
+            <property expression="json-eval($.systemId)" name="systemId" scope="default" type="STRING"/>
+            <log level="custom">
+                <property expression="get-property('Req-payload')" name="Request"/>
+                <property expression="get-property('password')" name="password"/>
+            </log>
+            <sequence key="imperial_auth_seq"/>
+            <call>
+                <endpoint key="UserRegisterEP"/>
+            </call>
+            <property expression="json-eval($.)" name="hsapi-res-payload" scope="default" type="STRING"/>
+            <log level="custom">
+                <property expression="get-property('hsapi-res-payload')" name="HSAPI Register Response"/>
+            </log>
+            <payloadFactory media-type="json">
+                <format>
+{
+    "password": "noetic1234",
+    "newPassword": "noetic1234",
+    "identityApiDTO": {
+        "userName": "test115esb.lk"
+    }
+}
+		</format>
+                <args/>
+            </payloadFactory>
+            <property name="messageType" scope="axis2" type="STRING" value="application/json"/>
+            <property expression="json-eval($.)" name="profile-req-payload" scope="default" type="STRING"/>
+            <log level="custom">
+                <property expression="get-property('profile-req-payload')" name="Profile Upsert Req"/>
+            </log>
+            <sequence key="profile_api_auth_seq"/>
+            <property name="ContentType" scope="axis2" type="STRING" value="application/json"/>
+            <send>
+                <endpoint key="ProfileUpsertEP"/>
+            </send>
+        </inSequence>
+        <outSequence>
+            <property expression="json-eval($.)" name="Res-payload" scope="default" type="STRING"/>
+            <log level="custom">
+                <property expression="get-property('Res-payload')" name="Profile Response"/>
+            </log>
             <send/>
         </outSequence>
         <faultSequence>

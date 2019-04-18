@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<endpoint name="ProfileUpsertEP" xmlns="http://ws.apache.org/ns/synapse">
+    <http method="post" uri-template="https://dev.wearenoetic.com:8443/profile-api/v1/profiles?systemKey=EF5ABD24-0AD7-11E6-93FF-9D9577E92AEE-IMP01&amp;catalogueKey=IDENTITY_API_N03t1c"/>
+</endpoint>
