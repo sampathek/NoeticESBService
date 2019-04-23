@@ -8,14 +8,14 @@
     <artifact name="LoginEP" groupId="com.example.NoeticService.endpoint" version="1.0.0" type="synapse/endpoint" serverRole="EnterpriseServiceBus">
         <file>src/main/synapse-config/endpoints/LoginEP.xml</file>
     </artifact>
-    <artifact name="fault_sequence_type_1" groupId="com.example.NoeticService.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
-        <file>src/main/synapse-config/sequences/fault_sequence_type_1.xml</file>
+    <artifact name="seq_fault_type_1" groupId="com.example.NoeticService.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/seq_fault_type_1.xml</file>
     </artifact>
-    <artifact name="imperial_auth_seq" groupId="com.example.NoeticService.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
-        <file>src/main/synapse-config/sequences/imperial_auth_seq.xml</file>
+    <artifact name="seq_imperial_auth" groupId="com.example.NoeticService.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/seq_imperial_auth.xml</file>
     </artifact>
-    <artifact name="profile_api_auth_seq" groupId="com.example.NoeticService.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
-        <file>src/main/synapse-config/sequences/profile_api_auth_seq.xml</file>
+    <artifact name="seq_profile_api_auth" groupId="com.example.NoeticService.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/seq_profile_api_auth.xml</file>
     </artifact>
     <artifact name="ILH_URL_DEV" groupId="com.example.NoeticService.local-entry" version="1.0.0" type="synapse/local-entry" serverRole="EnterpriseServiceBus">
         <file>src/main/synapse-config/local-entries/ILH_URL_DEV.xml</file>
@@ -26,7 +26,7 @@
     <artifact name="UserRegisterEP" groupId="com.example.NoeticService.endpoint" version="1.0.0" type="synapse/endpoint" serverRole="EnterpriseServiceBus">
         <file>src/main/synapse-config/endpoints/UserRegisterEP.xml</file>
     </artifact>
-    <artifact name="common_seq" groupId="com.example.NoeticService.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
-        <file>src/main/synapse-config/sequences/common_seq.xml</file>
+    <artifact name="seq_common" groupId="com.example.NoeticService.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/seq_common.xml</file>
     </artifact>
 </artifacts>
